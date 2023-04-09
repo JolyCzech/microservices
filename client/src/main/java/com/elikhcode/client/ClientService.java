@@ -1,9 +1,16 @@
 package com.elikhcode.client;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
+@AllArgsConstructor
 public class ClientService {
+
+    private final ClientRepository clientRepository;
+    private final RestTemplate restTemplate;
+
 
     public void registerClient(ClientRegistrationRequest request) {
         Client client = Client.builder()
@@ -13,6 +20,19 @@ public class ClientService {
                 .build();
         //todo: check if email valid
         //todo: check if email not token
-        //todo: check if client in db
+        clientRepository.saveAndFlush(client);
+        //todo: check if scam
+        ScamCheckResponse scamCheckResponse = restTemplate.getForObject(
+                "http://localhost:8081/api/v1/scam-check/{clientId}",
+                ScamCheckResponse.class,
+                client.getId()
+        );
+
+        assert scamCheckResponse != null;
+        if (scamCheckResponse.isScammer()) {
+            throw new IllegalStateException("Scammer");
+        }
+
+        //todo: send notification
     }
 }

@@ -1,4 +1,4 @@
-package com.elikhcode.client;
+package com.elikhcode.scam;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,24 +6,26 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class Client {
+@Entity
+public class ScamCheckHistory {
+
     @Id
     @SequenceGenerator(
-            name = "client_id_sequence",
-            sequenceName = "client_id_sequence"
+            name = "scam_id_sequence",
+            sequenceName = "scam_id_sequence"
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "client_id_sequence"
+            generator = "scam_id_sequence"
     )
     private Integer id;
-    private String firstName;
-    private String lastName;
-    private String email;
-
+    private Integer clientId;
+    private Boolean isScammer;
+    private LocalDateTime createdAt;
 }
