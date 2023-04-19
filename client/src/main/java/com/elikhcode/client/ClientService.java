@@ -22,13 +22,13 @@ public class ClientService {
         //todo: check if email not token
         clientRepository.saveAndFlush(client);
         //todo: check if scam
-        ScamCheckResponse scamCheckResponse = restTemplate.getForObject(
+        Boolean isScammer = restTemplate.getForObject(
                 "http://localhost:8081/api/v1/scam-check/{clientId}",
-                ScamCheckResponse.class,
+                Boolean.class,
                 client.getId()
         );
+        ScamCheckResponse scamCheckResponse = new ScamCheckResponse(isScammer);
 
-        assert scamCheckResponse != null;
         if (scamCheckResponse.isScammer()) {
             throw new IllegalStateException("Scammer");
         }

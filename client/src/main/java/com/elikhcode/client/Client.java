@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class Client {
+public class Client{
     @Id
     @SequenceGenerator(
             name = "client_id_sequence",
@@ -25,5 +25,6 @@ public class Client {
     private String firstName;
     private String lastName;
     private String email;
+
 
 }

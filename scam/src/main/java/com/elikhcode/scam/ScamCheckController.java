@@ -13,10 +13,10 @@ public class ScamCheckController {
     private final ScamCheckService scamCheckService;
 
     @GetMapping(path = "{clientId}")
-    public ScamCheckResponse isScam(
+    public Boolean isScam(
             @PathVariable("clientId") Integer clientID) {
         boolean isScamClient = scamCheckService.isScamClient(clientID);
         log.info("scam check request client {}",clientID);
-        return new ScamCheckResponse(isScamClient);
+        return isScamClient;
     }
 }
