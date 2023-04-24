@@ -1,4 +1,5 @@
-package com.elikhcode.client;
+package scam;
 
 public record ScamCheckResponse(Boolean isScammer) {
 }
+

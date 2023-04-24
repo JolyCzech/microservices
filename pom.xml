@@ -3,11 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
-    <modules>
-        <module>client</module>
-        <module>scam</module>
-        <module>eureka-server</module>
-    </modules>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -17,6 +13,16 @@
     <groupId>com.elichcode</groupId>
     <artifactId>elikhservises</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+
+    <modules>
+        <module>client</module>
+        <module>scam</module>
+        <module>eureka-server</module>
+        <module>consumer</module>
+        <module>notifications</module>
+        <module>amqp</module>
+    </modules>
+
     <name>elikhservices</name>
     <description>elikhservices</description>
     <properties>

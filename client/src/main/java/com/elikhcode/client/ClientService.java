@@ -1,15 +1,20 @@
 package com.elikhcode.client;
 
+import com.elikhcode.amqp.RabbitMQMessageProducer;
 import lombok.AllArgsConstructor;
+import notification.NotificationRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import scam.ScamCheckResponse;
+import scam.ScamClient;
 
 @Service
 @AllArgsConstructor
 public class ClientService {
 
     private final ClientRepository clientRepository;
-    private final RestTemplate restTemplate;
+    private final RabbitMQMessageProducer rabbitMQMessageProducer;
+    private final ScamClient scamClient;
 
 
     public void registerClient(ClientRegistrationRequest request) {
@@ -21,18 +26,24 @@ public class ClientService {
         //todo: check if email valid
         //todo: check if email not token
         clientRepository.saveAndFlush(client);
-        //todo: check if scam
-        Boolean isScammer = restTemplate.getForObject(
-                "http://localhost:8081/api/v1/scam-check/{clientId}",
-                Boolean.class,
-                client.getId()
-        );
-        ScamCheckResponse scamCheckResponse = new ScamCheckResponse(isScammer);
+
+        ScamCheckResponse scamCheckResponse =
+                scamClient.isScammer(client.getId());
 
         if (scamCheckResponse.isScammer()) {
             throw new IllegalStateException("Scammer");
         }
 
-        //todo: send notification
+        NotificationRequest notificationRequest = new NotificationRequest(
+                client.getId(),
+                client.getEmail(),
+                String.format("Hi %s, welcome to Elikhcode...",
+                        client.getFirstName())
+        );
+        rabbitMQMessageProducer.publish(
+                notificationRequest,
+                "internal.exchange",
+                "internal.notification.routing-key"
+        );
     }
 }
